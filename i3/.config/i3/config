@@ -43,10 +43,18 @@ bindsym $mod+z exec --no-startup-id morc_menu
 ################################################################################################
 
 exec --no-startup-id volumeicon
-bindsym $mod+Ctrl+m exec terminal -e 'alsamixer'
+#bindsym $mod+Ctrl+m exec terminal -e 'alsamixer'
 #exec --no-startup-id pulseaudio
 #exec --no-startup-id pa-applet
-#bindsym $mod+Ctrl+m exec pavucontrol
+bindsym $mod+Ctrl+m exec pavucontrol
+
+# Use pactl to adjust volume in PulseAudio.
+set $refresh_i3status killall -SIGUSR1 i3status
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10% && $refresh_i3status
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -10% && $refresh_i3status
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && $refresh_i3status
+bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3status
+
 
 ################################################################################################
 
@@ -160,6 +168,11 @@ bindsym $mod+F9 workspace number $ws9
 bindsym $mod+F10 workspace number $ws10
 bindsym $mod+F11 workspace number $ws11
 bindsym $mod+F12 workspace number $ws12
+
+# switch workspaces on mod+mousewheel up/down
+bindsym --whole-window --border $mod+Mod1+button5 workspace next_on_output
+bindsym --whole-window --border $mod+Mod1+button4 workspace prev_on_output
+
 
 # Move focused container to workspace
 bindsym $mod+Ctrl+F1 move container to workspace $ws1
